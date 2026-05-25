@@ -1,0 +1,29 @@
+Sunrise Consulting Group
+88 Maple Drive, Suite 300
+Austin, TX 78701
+
+INVOICE
+
+Invoice Number: INV-2025-0117
+Date: January 20, 2025
+Due Date: February 19, 2025
+
+Bill To:
+  Pinnacle Ventures LLC
+  1000 Tech Blvd
+  San Francisco, CA 94105
+
+Services Rendered:
+  - Strategic Business Consulting (40 hrs @ $150/hr)   $6,000.00
+  - Market Research Report                             $1,500.00
+  - Travel & Expenses (reimbursable)                     $320.00
+
+                                         Subtotal:    $7,820.00
+                                         Tax (8.25%): $  645.15
+                                    Total Amount Due: $8,465.15
+
+Payment Terms: Net 30
+Please make checks payable to: Sunrise Consulting Group
+Or pay online at: www.sunriseconsulting.com/pay
+
+Thank you for choosing Sunrise Consulting Group!

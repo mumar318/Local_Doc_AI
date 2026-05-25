@@ -1,0 +1,43 @@
+PowerGrid Energy Services
+Customer Service: 1-800-555-0199
+www.powergridenergy.com
+
+ELECTRICITY BILL
+
+Account Number:   PG-4471-8823
+Customer Name:    Robert & Susan Thompson
+Service Address:  52 Elm Street, Portland, OR 97201
+Billing Period:   December 1, 2024 – December 31, 2024
+Bill Date:        January 5, 2025
+Due Date:         January 28, 2025
+
+-----------------------------------------------------------
+METER READING DETAILS
+-----------------------------------------------------------
+Previous Reading (Dec 1):    48,210 kWh
+Current Reading  (Dec 31):   48,892 kWh
+Total Usage:                    682 kWh
+
+-----------------------------------------------------------
+CHARGES
+-----------------------------------------------------------
+Energy Charge (682 kWh × $0.1142/kWh)          $77.89
+Distribution Charge                              $12.50
+Transmission Charge                               $8.20
+Renewable Energy Surcharge                        $3.40
+State Tax (5%)                                    $5.10
+-----------------------------------------------------------
+Amount Due:                                     $107.09
+-----------------------------------------------------------
+
+Previous Balance:    $0.00
+Payments Received:   $0.00
+Current Charges:   $107.09
+TOTAL AMOUNT DUE:  $107.09
+
+Pay by: January 28, 2025
+
+Payment Options:
+  • Online: www.powergridenergy.com/pay
+  • Phone:  1-800-555-0199
+  • Mail:   PO Box 1000, Portland, OR 97207

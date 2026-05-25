@@ -1,0 +1,41 @@
+MEDICAL REPORT
+
+Patient Name:    Jonathan Adeyemi
+Date of Birth:   14 September 1985
+Patient ID:      MRN-20250214-0088
+Date of Visit:   February 14, 2025
+Attending:       Dr. Claire Fontaine, MD (Internal Medicine)
+Facility:        Riverside Community Hospital
+
+CHIEF COMPLAINT
+Patient presents with persistent fatigue, mild shortness of breath on exertion,
+and occasional dizziness over the past 3 weeks.
+
+HISTORY OF PRESENT ILLNESS
+Mr. Adeyemi is a 39-year-old male with no significant past medical history.
+He reports gradual onset of fatigue beginning approximately 3 weeks ago.
+He denies chest pain, palpitations, fever, or recent illness.
+
+PHYSICAL EXAMINATION
+  Vital Signs:  BP 128/82 mmHg, HR 78 bpm, RR 16/min, Temp 36.8°C, SpO2 97%
+  General:      Alert and oriented, mild pallor noted
+  Cardiovascular: Regular rate and rhythm, no murmurs
+  Respiratory:  Clear to auscultation bilaterally
+  Abdomen:      Soft, non-tender, no organomegaly
+
+INVESTIGATIONS
+  CBC:          Hb 10.2 g/dL (low), MCV 72 fL (low), Ferritin 8 ng/mL (low)
+  Iron Studies: Serum Iron 45 µg/dL (low), TIBC 420 µg/dL (high)
+  Impression:   Iron-deficiency anaemia
+
+ASSESSMENT & PLAN
+  1. Iron-deficiency anaemia — likely dietary/absorption cause
+     • Start ferrous sulfate 325 mg twice daily with vitamin C
+     • Dietary counselling referral
+     • Repeat CBC and iron studies in 6 weeks
+  2. Fatigue and dyspnoea — expected to resolve with iron supplementation
+  3. Follow-up appointment in 6 weeks or sooner if symptoms worsen
+
+Dr. Claire Fontaine, MD
+Riverside Community Hospital
+February 14, 2025

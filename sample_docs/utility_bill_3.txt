@@ -1,0 +1,38 @@
+SolarGrid Electric Co-operative
+Member Services: 1-888-555-0422
+www.solargridcoop.com
+
+MONTHLY ELECTRICITY STATEMENT
+
+Account No:       SGC-7712-0034
+Member Name:      Elena Vasquez
+Service Address:  17 Sunflower Lane, Phoenix, AZ 85001
+Billing Period:   01/01/2025 – 31/01/2025
+Statement Date:   02/02/2025
+Payment Due By:   22/02/2025
+
+-----------------------------------------------------------
+ENERGY USAGE SUMMARY
+-----------------------------------------------------------
+Meter ID:              AZ-88-4421
+Previous Reading:      22,100 kWh
+Current Reading:       22,934 kWh
+Total Energy Usage:       834 kWh
+
+Solar Generation Credit:  -120 kWh
+Net Usage:                 714 kWh
+
+-----------------------------------------------------------
+BILLING DETAILS
+-----------------------------------------------------------
+Energy Charge (714 kWh × $0.0985)          $70.33
+Demand Charge                               $11.00
+Grid Access Fee                              $8.50
+Solar Buyback Credit                        -$9.60
+Taxes & Fees (6%)                            $4.81
+-----------------------------------------------------------
+Amount Due:                                 $85.04
+-----------------------------------------------------------
+
+Auto-pay enrolled: Payment will be deducted on 22/02/2025.
+Questions? Email: billing@solargridcoop.com

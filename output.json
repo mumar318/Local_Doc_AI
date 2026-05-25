@@ -1,0 +1,77 @@
+{
+  "invoice_1.txt": {
+    "class": "Invoice",
+    "invoice_number": "INV-2025-0042",
+    "date": "15/01/2025",
+    "company": "ACME Corporation",
+    "total_amount": 345.0
+  },
+  "invoice_2.txt": {
+    "class": "Invoice",
+    "invoice_number": "INV-8801",
+    "date": "03/03/2025",
+    "company": "TechSupply Ltd.",
+    "total_amount": 4750.0
+  },
+  "invoice_3.txt": {
+    "class": "Invoice",
+    "invoice_number": "INV-2025-0117",
+    "date": "January 20, 2025",
+    "company": "Sunrise Consulting Group",
+    "total_amount": 8465.15
+  },
+  "other_1.txt": {
+    "class": "Other"
+  },
+  "other_2.txt": {
+    "class": "Other"
+  },
+  "other_3.txt": {
+    "class": "Other"
+  },
+  "resume_1.txt": {
+    "class": "Resume",
+    "name": "Jane Mitchell",
+    "email": "jane.mitchell@email.com",
+    "phone": "+1 (415) 555-0192",
+    "experience_years": 7
+  },
+  "resume_2.txt": {
+    "class": "Resume",
+    "name": "Amir Hassan",
+    "email": "a.hassan@manchester.ac.uk",
+    "phone": "+44 7700 900123",
+    "experience_years": 10
+  },
+  "resume_3.txt": {
+    "class": "Resume",
+    "name": "Maria Gonzalez",
+    "email": "maria.gonzalez@promail.com",
+    "phone": "(312) 555-0847",
+    "experience_years": 5
+  },
+  "unclassifiable_1.txt": {
+    "class": "Unclassifiable"
+  },
+  "utility_bill_1.txt": {
+    "class": "Utility Bill",
+    "account_number": "PG-4471-8823",
+    "date": "January 5, 2025",
+    "usage_kwh": 682.0,
+    "amount_due": 107.09
+  },
+  "utility_bill_2.txt": {
+    "class": "Utility Bill",
+    "account_number": "CGW-00291-7744",
+    "date": "February 3, 2025",
+    "usage_kwh": null,
+    "amount_due": 364.5
+  },
+  "utility_bill_3.txt": {
+    "class": "Utility Bill",
+    "account_number": "SGC-7712-0034",
+    "date": "02/02/2025",
+    "usage_kwh": 834.0,
+    "amount_due": 85.04
+  }
+}

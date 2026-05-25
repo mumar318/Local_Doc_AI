@@ -1,0 +1,47 @@
+CityGas & Water Authority
+PO Box 5500, Denver, CO 80217
+Tel: (720) 555-0300  |  www.citygaswater.com
+
+UTILITY BILL — GAS & WATER
+
+Account Number:   CGW-00291-7744
+Customer:         Lakewood Apartments LLC
+Service Address:  300 Lakewood Drive, Denver, CO 80226
+Statement Date:   February 3, 2025
+Billing Period:   January 1, 2025 – January 31, 2025
+Due Date:         February 25, 2025
+
+=============================================================
+GAS SERVICE
+=============================================================
+Previous Reading:   1,204 CCF
+Current Reading:    1,389 CCF
+Usage:                185 CCF (Therms)
+
+Gas Charges:
+  Distribution (185 therms × $0.52)          $96.20
+  Supply Charge (185 therms × $0.68)        $125.80
+  Customer Charge                             $12.00
+  Gas Subtotal:                             $234.00
+
+=============================================================
+WATER SERVICE
+=============================================================
+Usage:  18,500 gallons (2,473 cubic feet)
+
+Water Charges:
+  Tier 1 (0–10,000 gal × $0.004)             $40.00
+  Tier 2 (10,001–18,500 gal × $0.006)        $51.00
+  Sewer Charge                                $35.00
+  Water Subtotal:                           $126.00
+
+=============================================================
+SUMMARY
+=============================================================
+Gas Subtotal:                              $234.00
+Water Subtotal:                            $126.00
+State Environmental Fee:                     $4.50
+Total Amount Due:                          $364.50
+=============================================================
+
+Please pay by February 25, 2025 to avoid a late fee.
