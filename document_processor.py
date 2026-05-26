@@ -40,6 +40,19 @@ def extract_text_from_pdf(pdf_path: str) -> str:
     text = _extract_pdf_pypdf2(pdf_path)
     if len(text.strip()) < 50:
         text = _extract_pdf_pdfminer(pdf_path)
+    # OCR fallback if still too short
+    if len(text.strip()) < 50:
+        try:
+            from pdf2image import convert_from_path
+            import pytesseract
+            images = convert_from_path(pdf_path)
+            ocr_text = []
+            for img in images:
+                ocr_text.append(pytesseract.image_to_string(img))
+            text = "\n".join(ocr_text)
+            print(f"  [OCR used for {pdf_path}]")
+        except Exception as e:
+            print(f"  [OCR failed for {pdf_path}]: {e}")
     return text
 
 

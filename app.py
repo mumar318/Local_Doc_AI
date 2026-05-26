@@ -23,7 +23,7 @@ from document_processor import (
     extract_text_from_docx,
 )
 from extractor import extract_fields
-from search import SemanticSearch
+from search import SemanticSearch, load_embedding_model, fingerprint
 
 # ---------------------------------------------------------------------------
 # Page config
@@ -110,6 +110,9 @@ FIELD_LABELS = {
     "email": "Email",
     "phone": "Phone",
     "experience_years": "Experience (yrs)",
+    "linkedin": "LinkedIn",
+    "github": "GitHub",
+    "skills": "Skills",
 
     # Utility Bill
     "account_number": "Account #",
@@ -148,9 +151,17 @@ def render_fields(fields: dict) -> str:
 
 
 @st.cache_resource(show_spinner="Loading embedding model…")
-def get_search_engine(doc_texts: tuple, doc_names: tuple) -> SemanticSearch:
+def _warm_model():
+    """Pre-load the embedding model once at startup so searches are instant."""
+    return load_embedding_model()
+
+
+@st.cache_resource(show_spinner="Building search index…")
+def get_search_engine(doc_fingerprint: str, doc_texts: tuple, doc_names: tuple, _version: int = 2) -> SemanticSearch:
     """
-    Cache the FAISS index so it isn't rebuilt every interaction.
+    Cache the FAISS index keyed on a fingerprint of the document texts.
+    The model itself is already loaded by _warm_model() so this only
+    re-runs when the document set actually changes.
     """
     return SemanticSearch(list(doc_texts), list(doc_names))
 
@@ -219,6 +230,9 @@ if "results" not in st.session_state:
 if "search_hits" not in st.session_state:
     st.session_state.search_hits = []
 
+if "last_query" not in st.session_state:
+    st.session_state.last_query = ""
+
 # ---------------------------------------------------------------------------
 # Sidebar
 # ---------------------------------------------------------------------------
@@ -226,6 +240,11 @@ with st.sidebar:
 
     st.title("📄 Doc AI")
     st.caption("Local • Offline • Open-source")
+
+    # Show model warm-up status
+    with st.spinner("Warming up embedding model…"):
+        _warm_model()
+    st.caption("✅ Embedding model ready")
 
     st.divider()
 
@@ -419,18 +438,14 @@ with tab_search:
 
     query = st.text_input(
         "Query",
-        placeholder='e.g. "Find all documents mentioning payments due in January"',
+        placeholder='e.g. "Python developer with machine learning experience"',
     )
 
-    # FIXED SLIDER ISSUE
+    # Slider — hide when only 1 doc
     if len(results) == 1:
-
         top_k = 1
-
         st.info("Only 1 document available for search.")
-
     else:
-
         top_k = st.slider(
             "Number of results",
             min_value=1,
@@ -440,60 +455,87 @@ with tab_search:
 
     if st.button("Search", type="primary", disabled=not query):
 
-        with st.spinner("Building semantic index and searching…"):
+        with st.spinner("Searching…"):
 
             fnames = list(results.keys())
+            texts = [results[f]["text"] for f in fnames]
+            fp = fingerprint(texts)
 
-            texts = [
-                results[f]["text"]
-                for f in fnames
-            ]
+            engine = get_search_engine(fp, tuple(texts), tuple(fnames))
+            hits = engine.search(query, top_k=top_k)
 
-            engine = get_search_engine(
-                tuple(texts),
-                tuple(fnames)
-            )
+            # Attach best passage for each hit
+            hits_with_snippets = []
+            for fname, score in hits:
+                doc_text = results[fname]["text"]
+                snippet = engine.best_passage(query, doc_text, window=350)
+                hits_with_snippets.append((fname, score, snippet))
 
-            hits = engine.search(
-                query,
-                top_k=top_k
-            )
-
-            st.session_state.search_hits = hits
+            st.session_state.search_hits = hits_with_snippets
+            st.session_state.last_query = query
 
     if st.session_state.search_hits:
 
         st.divider()
+        last_q = st.session_state.get("last_query", query)
+        st.caption(f"Results for: **{last_q}**")
 
-        st.caption(f"Results for: **{query}**")
+        for rank, item in enumerate(st.session_state.search_hits, 1):
 
-        for rank, (fname, score) in enumerate(
-            st.session_state.search_hits,
-            1
-        ):
-
+            fname, score, snippet = item
             doc_class = results[fname]["class"]
+            css, icon = CLASS_COLORS.get(doc_class, ("badge-other", "📄"))
 
-            _, icon = CLASS_COLORS.get(
-                doc_class,
-                ("", "📄")
-            )
+            # Colour the score: green ≥ 0.45, amber ≥ 0.25, red below
+            if score >= 0.45:
+                score_color = "#15803d"
+            elif score >= 0.25:
+                score_color = "#a16207"
+            else:
+                score_color = "#b91c1c"
 
-            bar_val = max(0.0, float(score))
+            score_pct = int(max(0.0, min(1.0, score)) * 100)
 
-            c1, c2, c3 = st.columns([0.5, 3, 1.5])
+            with st.container():
+                # Header row
+                hcol1, hcol2, hcol3 = st.columns([0.4, 4, 1.5])
+                hcol1.markdown(f"### #{rank}")
+                hcol2.markdown(
+                    f'<span class="class-badge {css}">{icon} {doc_class}</span> '
+                    f"**{fname}**",
+                    unsafe_allow_html=True,
+                )
+                hcol3.markdown(
+                    f'<div style="text-align:right;font-size:1.1rem;'
+                    f'font-weight:700;color:{score_color}">'
+                    f'{score_pct}% match</div>',
+                    unsafe_allow_html=True,
+                )
 
-            c1.markdown(f"**#{rank}**")
+                # Extracted fields summary
+                fields = {
+                    k: v
+                    for k, v in results[fname].items()
+                    if k not in ("class", "text") and v is not None
+                }
+                if fields:
+                    field_parts = []
+                    for k, v in fields.items():
+                        label = FIELD_LABELS.get(k, k.replace("_", " ").title())
+                        field_parts.append(f"**{label}:** {v}")
+                    st.markdown("  ·  ".join(field_parts))
 
-            c2.markdown(
-                f"{icon} **{fname}**  `{doc_class}`",
-                unsafe_allow_html=True
-            )
+                # Best-matching passage snippet
+                if snippet:
+                    st.markdown(
+                        f'<div style="background:#f8fafc;border-left:3px solid #6366f1;'
+                        f'padding:8px 12px;border-radius:4px;font-size:0.88rem;'
+                        f'color:#374151;margin:6px 0 12px 0">'
+                        f'📌 {snippet}</div>',
+                        unsafe_allow_html=True,
+                    )
 
-            c3.progress(
-                bar_val,
-                text=f"{score:.4f}"
-            )
+                st.divider()
 
 # ---------------------------------------------------------------------------
 # TAB 3 - JSON

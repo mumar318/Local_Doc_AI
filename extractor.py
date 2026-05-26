@@ -125,9 +125,35 @@ def _extract_resume(text: str) -> dict[str, Any]:
     # capitalised line that is NOT a known section header.
     _SECTION_HEADERS = re.compile(
         r"^(curriculum vitae|resume|objective|summary|profile|education|"
-        r"skills?|certifications?|references?|experience|employment)$",
+        r"core\s+technical\s+skills?|technical\s+skills?|skills?|certifications?|"
+        r"references?|experience|employment|work\s+experience|professional\s+experience|"
+        r"employment\s+history|projects?|achievements?|awards?|languages?|"
+        r"interests?|hobbies|contact|personal\s+information|about\s+me)$",
         re.IGNORECASE,
     )
+
+    # Also treat any ALL-CAPS line or a line with 3+ title-case words as a header
+    def _is_header(line: str) -> bool:
+        if _SECTION_HEADERS.match(line):
+            return True
+        # All-caps line (e.g. "WORK EXPERIENCE")
+        if line.isupper() and len(line) > 3:
+            return True
+        # Lines that look like section headings: 3+ title-case words
+        words = line.split()
+        if len(words) >= 3 and all(w[0].isupper() for w in words if w.isalpha()):
+            # Likely a heading like "Core Technical Skills" — skip unless it
+            # could be a real name (max 4 words, no common heading keywords)
+            heading_keywords = re.compile(
+                r"\b(skills?|experience|education|summary|profile|"
+                r"technical|professional|employment|history|core|"
+                r"certifications?|projects?|achievements?)\b",
+                re.IGNORECASE,
+            )
+            if heading_keywords.search(line):
+                return True
+        return False
+
     name = _first_match([
         # "Name: Dr. Amir Hassan" or "Name: Jane Mitchell"
         r"(?:full\s+)?name[:\s]+(?:Dr\.?|Mr\.?|Ms\.?|Mrs\.?|Prof\.?)?\s*([A-Z][a-z]+(?: [A-Z][a-z]+){1,3})",
@@ -138,7 +164,9 @@ def _extract_resume(text: str) -> dict[str, Any]:
         # also handling titles like Dr., Mr., Ms.
         for line in text.splitlines():
             line = line.strip()
-            if _SECTION_HEADERS.match(line):
+            if not line:
+                continue
+            if _is_header(line):
                 continue
             # With optional title prefix
             m = re.match(
@@ -148,6 +176,27 @@ def _extract_resume(text: str) -> dict[str, Any]:
             )
             if m:
                 name = m.group(1)
+                break
+
+    if not name:
+        # PDF fallback: scan for a name-like pattern anywhere in the first
+        # 800 chars — PDFs often don't have clean line breaks at the top.
+        # Look for 2-3 capitalised words NOT preceded by common label words.
+        for m in re.finditer(
+            r"(?<![:\w])([A-Z][a-z]{1,20}(?:\s+[A-Z][a-z]{1,20}){1,2})(?!\s*:)",
+            text[:800],
+        ):
+            candidate = m.group(1).strip()
+            words = candidate.split()
+            # Must be 2-3 words, not a heading keyword
+            heading_kw = re.compile(
+                r"\b(skills?|experience|education|summary|profile|technical|"
+                r"professional|employment|history|core|certifications?|"
+                r"projects?|achievements?|resume|curriculum|vitae|objective)\b",
+                re.IGNORECASE,
+            )
+            if 2 <= len(words) <= 3 and not heading_kw.search(candidate):
+                name = candidate
                 break
 
     email = _first_match([
@@ -163,16 +212,53 @@ def _extract_resume(text: str) -> dict[str, Any]:
         phone = re.sub(r"\s+", " ", phone).strip()
 
     experience_years = _to_int(_first_match([
-        r"(\d+)\+?\s+years?\s+(?:of\s+)?(?:professional\s+)?experience",
-        r"experience[:\s]+(\d+)\+?\s+years?",
-        r"(\d+)\+?\s+years?\s+(?:in|of)\s+\w+",
+        r"(\d+)\+?\s*years?\s+(?:of\s+)?(?:professional\s+)?experience",
+        r"experience[:\s]+(\d+)\+?\s*years?",
+        r"(\d+)\+?\s*years?\s+(?:in|of)\s+\w+",
+        r"(\d+)\+?\s*yrs?\s+(?:of\s+)?(?:professional\s+)?experience",
+        # Handle PDF extraction artifacts like "5+ years" anywhere
+        r"(\d+)\s*\+\s*years?",
     ], text))
+
+    # LinkedIn profile URL
+    linkedin = _first_match([
+        r"linkedin\.com/in/([\w\-]+)",
+        r"linkedin[:\s]+([\w\-./]+)",
+    ], text)
+    if linkedin and not linkedin.startswith("linkedin.com"):
+        linkedin = f"linkedin.com/in/{linkedin}"
+
+    # GitHub profile URL
+    github = _first_match([
+        r"github\.com/([\w\-]+)",
+        r"github[:\s]+([\w\-./]+)",
+    ], text)
+    if github and not github.startswith("github.com"):
+        github = f"github.com/{github}"
+
+    # Top skills — grab the skills section content
+    skills = None
+    skills_match = re.search(
+        r"(?:core\s+technical\s+skills?|technical\s+skills?|skills?)[:\s]*\n((?:.+\n?){1,10})",
+        text,
+        re.IGNORECASE,
+    )
+    if skills_match:
+        raw_skills = skills_match.group(1).strip()
+        # Flatten to a comma-separated list, removing bullets/dashes
+        skill_items = re.split(r"[\n,|•\-–]+", raw_skills)
+        skill_items = [s.strip() for s in skill_items if s.strip() and len(s.strip()) > 1]
+        if skill_items:
+            skills = ", ".join(skill_items[:10])  # cap at 10 items
 
     return {
         "name": name,
         "email": email,
         "phone": phone,
         "experience_years": experience_years,
+        "linkedin": linkedin,
+        "github": github,
+        "skills": skills,
     }
 
 
