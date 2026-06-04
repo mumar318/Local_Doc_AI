@@ -102,6 +102,7 @@ def _extract_invoice(text: str) -> dict[str, Any]:
                 break
 
     total_amount = _to_float(_first_match([
+        r"total\s+amount[:\s$£€]*([\d,]+\.?\d*)",
         r"total\s+(?:amount\s+)?(?:due|payable)[:\s$£€]*([\d,]+\.?\d*)",
         r"(?:grand\s+)?total[:\s$£€]*([\d,]+\.?\d*)",
         r"amount\s+(?:due|payable)[:\s$£€]*([\d,]+\.?\d*)",
@@ -270,7 +271,10 @@ def _extract_utility_bill(text: str) -> dict[str, Any]:
     account_number = _first_match([
         r"account[\s_-]?(?:no|number|num|#)[:\s#]*([A-Z0-9][\w-]{3,20})",
         r"customer[\s_-]?(?:no|number|id)[:\s#]*([A-Z0-9][\w-]{3,20})",
+        r"consumer[\s_-]?(?:no|number|id)[:\s#]*([A-Z0-9][\w-]{3,20})",
         r"acct[\s_#.]*([A-Z0-9][\w-]{3,20})",
+        r"metering\s+unit[:\s#]*([A-Z0-9][\w-]{3,20})",
+        r"ref[erence]*[\s_-]?(?:no|number|#)[:\s#]*([A-Z0-9][\w-]{3,20})",
     ], text)
 
     date = _first_match([
@@ -286,6 +290,9 @@ def _extract_utility_bill(text: str) -> dict[str, Any]:
         r"([\d,]+\.?\d*)\s*kwh\s+(?:used|consumed|total)",
         r"kwh[:\s]*([\d,]+\.?\d*)",
         r"electricity\s+used[:\s]*([\d,]+\.?\d*)",
+        r"(?:total|current)\s+units?[:\s]*([\d,]+\.?\d*)",
+        r"units?\s+(?:consumed|used)[:\s]*([\d,]+\.?\d*)",
+        r"(?:units?)[:\s]*([\d,]+\.?\d*)\s*(?:consumed|used|kWh)",
     ], text))
 
     amount_due = _to_float(_first_match([

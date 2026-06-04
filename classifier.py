@@ -57,6 +57,11 @@ _RESUME_SIGNALS = [
     (re.compile(r"\b\d+\s+years?\s+(?:of\s+)?experience\b", re.I), 4),
     (re.compile(r"\bproficiency\b", re.I), 2),
     (re.compile(r"\bresponsibilities\b", re.I), 3),
+    # Minimal resume patterns - catch short resumes with just contact + experience
+    (re.compile(r"email[:\s]*[\w.+-]+@[\w-]+\.[\w.]{2,}", re.I), 3),
+    (re.compile(r"phone[:\s]*[\+\d][\d\s\-().]{7,20}", re.I), 3),
+    (re.compile(r"experience[:\s]*\d+\s*years?", re.I), 4),
+    (re.compile(r"(?:experienced|skilled)\s+(?:professional|engineer|developer|analyst)", re.I), 3),
 ]
 
 _UTILITY_SIGNALS = [
@@ -77,10 +82,22 @@ _UTILITY_SIGNALS = [
     (re.compile(r"\btariff\b", re.I), 3),
     (re.compile(r"\btherm\b", re.I), 4),
     (re.compile(r"\bcubic\s+(?:feet|meters?)\b", re.I), 4),
+    # Pakistani utilities (PESCO, LESCO, WAPDA, K-Electric, etc.)
+    (re.compile(r"\bPESCO\b", re.I), 7),
+    (re.compile(r"\bLESCO\b", re.I), 7),
+    (re.compile(r"\bWAPDA\b", re.I), 7),
+    (re.compile(r"\bK[\s-]?Electric\b", re.I), 7),
+    (re.compile(r"\bmetering\s+unit\b", re.I), 5),
+    (re.compile(r"\bconsumer\s+(?:no|number|id)\b", re.I), 4),
+    (re.compile(r"\bunits?\s+(?:consumed|used)\b", re.I), 5),
+    (re.compile(r"\bunit\s+rate\b", re.I), 4),
+    (re.compile(r"\bfixed\s+charges?\b", re.I), 4),
+    (re.compile(r"\bemergency\s+surcharge\b", re.I), 4),
+    (re.compile(r"\badditional\s+charges?\b", re.I), 3),
 ]
 
 # Minimum total score required to assign a category (avoids false positives)
-_MIN_SCORE = 5
+_MIN_SCORE = 6
 
 # Minimum text length to attempt classification
 _MIN_TEXT_LENGTH = 30
